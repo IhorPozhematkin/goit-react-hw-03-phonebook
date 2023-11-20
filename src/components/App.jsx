@@ -5,11 +5,27 @@ import { Filter } from './Filter/Filter';
 import { PhonebookTitle, ContactsTitle, Wrapper } from './App.styled';
 import { nanoid } from 'nanoid';
 
+const CONTACTS = 'contacts';
+
 export class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = JSON.parse(localStorage.getItem(CONTACTS));
+    savedContacts &&
+      this.setState({
+        contacts: savedContacts,
+      });
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem(CONTACTS, JSON.stringify(this.state.contacts));
+    }
+  }
 
   addContact = newContact => {
     const duplicate = this.state.contacts.find(
